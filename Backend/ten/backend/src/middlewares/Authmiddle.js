@@ -1,42 +1,47 @@
-import  jwt from "jsonwebtoken";
+import { response } from "express";
+import jwt from "jsonwebtoken";
+import Users from "../models/UsersSchema.js";
 
-const userCheck=(req,res,next)=>{
-    const {id} = req.params
+const userCheck = async (req, res, next) => {
   try {
+    const token =
+      req.headers?.authorization?.split(" ")[1] || req.cookies.token;
+    if (!token) {
+      res.json({
+        status: false,
+        message: "token not found",
+      });
+    }
+   
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (decoded) {
+       console.log('decode.id---->', decoded.id);
+      const findUser = await Users.findById(decoded.id);
+      console.log("finduser--->", findUser);
+      if (findUser == null) {
+        return res.json({
+          status: false,
+          message: "user not valid",
+        });
+      }
 
-const token = req.headers?.authorization?.split(" ")[1] || req.cookies.token;
-if(!token){
-     res.json({
-        status:false,
-        message:'token not found'
-    })
+    
 
-}
-  const decoded = jwt.verify(token,process.env.JWT_SECRET)
-  
-if(decoded.id == id){
-  
-    next()
-}
-else{
-    res.json({
-        status:false,
-        message:'invalid token'
-    }) 
-}
-  console.log(decoded.id == id);
-  
-
-
-
+      req.user = findUser;
+      next();
+    } else {
+     return res.json({
+        status: false,
+        message: "invalid token",
+      });
+    }
   } catch (error) {
     res.json({
-        status:false,
-        message:error.message
-    })
+      status: false,
+      message: error.message,
+    });
   }
+};
 
-}
-
-
-export {userCheck}
+export { userCheck };

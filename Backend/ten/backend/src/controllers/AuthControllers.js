@@ -17,13 +17,34 @@ const addUser = async (req, res) => {
     const data1 = { name, email, password: hashPass,role:req.body.role };
     const user = new Users(data1);
     const data = await user.save();
-    console.log(data);
+    if(data){
+      console.log('yeh line chali');
+      
+      const token = jwt.sign(
+      { id: data._id, email: data.email,role:data.role},
+      process.env.JWT_SECRET,
+      function (err, token) {
+        console.log('error',err);
+        console.log('newtoken--->',token);
+        res.cookie("token", token, {
+          httpOnly: true,
+          secure: true,
+        });
+        console.log("isline tak aya");
 
-    res.json({
+      return  res.json({
       status: true,
       message: "user created successfully",
       user: data,
+      token:token
     });
+      },
+    );
+     
+    }
+   
+
+   
   } catch (error) {
     console.log("error in creating user-->", error);
 
@@ -164,14 +185,14 @@ const loginUser = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
       return res.json({
-        status: true,
+        status: false,
         message: "all fields are required",
       });
     }
     const user = await Users.findOne({ email: email });
     if (user == null) {
       return res.json({
-        status: true,
+        status: false,
         message: "cannot find user",
       });
     }
@@ -179,7 +200,7 @@ const loginUser = async (req, res) => {
     const decoded =await bcrypt.compare(password,user.password)
      if(decoded){
    const token = jwt.sign(
-      { id: user._id, email: user.email },
+      { id: user._id, email: user.email,role:user.role},
       process.env.JWT_SECRET,
       function (err, token) {
         res.cookie("token", token, {
