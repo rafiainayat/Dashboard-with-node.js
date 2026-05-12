@@ -1,7 +1,7 @@
 import express from "express";
 
 import { userCheck } from "../middlewares/Authmiddle.js";
-import { CreateBlog } from "../controllers/BlogControllers.js";
+import { CreateBlog, DeleteBlog } from "../controllers/BlogControllers.js";
 import multer from 'multer' 
 
 const blogroute = express.Router()
@@ -15,6 +15,7 @@ const upload = multer({
 })
 
 blogroute.post('/create',userCheck,upload.single('image'),CreateBlog)
+blogroute.delete('/delete/:id',userCheck,DeleteBlog)
 
 // authroute.getuSER('/user',addUser)
 

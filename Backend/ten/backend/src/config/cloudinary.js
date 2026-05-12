@@ -46,6 +46,7 @@ const uploadImg = async (file) => {
 
   });
  console.log('upload--->',uploadStr);
+ return {image:uploadStr.secure_url,public_id:uploadStr.public_id}
    
     } catch (error) {
         console.log('error-->',error);
@@ -55,4 +56,20 @@ const uploadImg = async (file) => {
 
 };
 
-export { uploadImg };
+const deleteImg = async (public_id) => {
+try {
+  
+
+  const result = await cloudinary.v2.uploader.destroy(public_id,{
+    resource_type:"image"
+  });
+return result
+} catch (error) {
+  console.log('error in dlt-->',error);
+  
+}
+
+}
+
+
+export { uploadImg ,deleteImg};
