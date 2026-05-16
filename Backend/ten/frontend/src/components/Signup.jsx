@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import api from '../config/service';
+import { getUser, setUser } from '../utils/AuthProf';
 
 
 const Signup = () => {
@@ -19,9 +20,11 @@ const Signup = () => {
     console.log('Form Data Submitted:', formData);
     try {
        const response = await api.post('/auth/user',formData)
-       console.log(response.data);
-       
-       
+       console.log(response.data.user);
+    setUser(response.data.user)
+   const user =  getUser()
+   console.log(user);
+   
     } catch (error) {
         console.log(error);
         

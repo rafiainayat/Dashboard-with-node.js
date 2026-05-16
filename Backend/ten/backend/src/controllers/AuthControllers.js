@@ -259,6 +259,25 @@ const logout = (req, res) => {
   }
 };
 
+
+const UserProfile =async (req,res)=>{
+  console.log(req.user);
+  try {
+    if(req.user){
+   return res.status(200).json({
+    status:true,
+    user:req.user
+   })
+    }
+  } catch (error) {
+    res.status(200).json({
+    status:true,
+    message :error.message
+   })
+  }
+    
+}
+
 export {
   addUser,
   allUsers,
@@ -267,4 +286,5 @@ export {
   deleteUser,
   loginUser,
   logout,
+  UserProfile
 };

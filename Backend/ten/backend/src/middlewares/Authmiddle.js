@@ -17,7 +17,7 @@ const userCheck = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     if (decoded) {
        console.log('decode.id---->', decoded.id);
-      const findUser = await Users.findById(decoded.id);
+      const findUser = await Users.findById(decoded.id).select("-password");
       console.log("finduser--->", findUser);
       if (findUser == null) {
         return res.json({
