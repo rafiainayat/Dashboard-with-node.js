@@ -1,11 +1,17 @@
 import axios from "axios";
+import api from './service'
 
 
-
+   
 export const fetchUser=async ()=>{
-    const response = await axios.get('http://localhost:3000/api/v1/auth/user-profile',{
-        headers:{
-            'Content-Type':'application/json'
-        }
-    })
+    const url = import.meta.env.VITE_BACKEND_URL
+console.log(url);
+try {
+    const response = await api.get(`/api/v1/auth/user-profile`)
+    return response.data.user
+} catch (error) {
+    console.log(error);
+    
+}
+    
 }

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import api from '../config/service';
 import { getUser, setUser } from '../utils/AuthProf';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 const Signup = () => {
+ const navigate =  useNavigate()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -19,11 +21,11 @@ const Signup = () => {
     e.preventDefault();
     console.log('Form Data Submitted:', formData);
     try {
-       const response = await api.post('/auth/user',formData)
-       console.log(response.data.user);
-    setUser(response.data.user)
-   const user =  getUser()
-   console.log(user);
+       const response = await api.post('api/v1/auth/user',formData)
+      if(response.data.user){
+        navigate('/')
+      }
+    
    
     } catch (error) {
         console.log(error);
@@ -45,7 +47,7 @@ const Signup = () => {
             value={formData.name}
             onChange={handleChange}
             required
-            style={{ width: '100%', padding: '8px' }}
+            style={{ width: '100%', padding: '8px' }}   className = 'border rounded-xl'
           />
         </div>
 
@@ -57,7 +59,7 @@ const Signup = () => {
             value={formData.email}
             onChange={handleChange}
             required
-            style={{ width: '100%', padding: '8px' }}
+            style={{ width: '100%', padding: '8px' }} className = 'border rounded-xl'
           />
         </div>
 
@@ -69,14 +71,16 @@ const Signup = () => {
             value={formData.password}
             onChange={handleChange}
             required
-            style={{ width: '100%', padding: '8px' }}
+            style={{ width: '100%', padding: '8px' }} className = 'border rounded-xl'
           />
         </div>
 
         <button type="submit" style={{ padding: '10px', background: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
           Sign Up
         </button>
+
       </form>
+      <Link to={'/login'}>Login</Link>
     </div>
   );
 };

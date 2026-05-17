@@ -1,6 +1,10 @@
 import { useState } from 'react'
-import Signup from './components/Signup'
-import AuthContext from './context/AuthContext'
+import Signup from './Pages/Signup'
+import {AuthContext} from './context/AuthContext'
+import AppRouter from './router/AppRouter'
+
+
+
 
 
 
@@ -8,10 +12,11 @@ function App() {
 
 
   return (
-   
-    <div>
-      <Signup/>
-    </div>
+   <AuthContext>
+
+     <AppRouter/>
+  
+    </AuthContext>
   
   )
 }
